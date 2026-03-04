@@ -23,15 +23,11 @@ CREATE TABLE public.posts (
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
 ALTER TABLE public.posts ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Anyone authenticated can view approved posts" ON public.posts
   FOR SELECT TO authenticated USING (status = 'approved' OR user_id = auth.uid());
-
 CREATE POLICY "Users can create posts" ON public.posts
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
 -- Create likes table
 CREATE TABLE public.likes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -40,9 +36,7 @@ CREATE TABLE public.likes (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(user_id, post_id)
 );
-
 ALTER TABLE public.likes ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Likes viewable by authenticated" ON public.likes
   FOR SELECT TO authenticated USING (true);
 
@@ -95,3 +89,4 @@ $$;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
