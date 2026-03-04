@@ -7,5 +7,3 @@ SET search_path = public
 AS $$
   SELECT 'Anon-' || substr(md5(random()::text), 1, 5);
 $$;
-
-
