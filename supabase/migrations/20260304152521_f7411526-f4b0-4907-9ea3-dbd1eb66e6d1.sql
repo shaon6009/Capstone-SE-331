@@ -11,10 +11,8 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Profiles viewable by authenticated users" ON public.profiles
   FOR SELECT TO authenticated USING (true);
-
 CREATE POLICY "Users can insert own profile" ON public.profiles
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
 -- Create posts table
 CREATE TABLE public.posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -55,15 +53,12 @@ CREATE TABLE public.comments (
   content TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
-
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
-
 CREATE POLICY "Comments viewable by authenticated" ON public.comments
   FOR SELECT TO authenticated USING (true);
 
 CREATE POLICY "Users can create comments" ON public.comments
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
-
 -- Function to generate anon name
 CREATE OR REPLACE FUNCTION public.generate_anon_name()
 RETURNS TEXT
@@ -71,7 +66,6 @@ LANGUAGE sql
 AS $$
   SELECT 'Anon-' || substr(md5(random()::text), 1, 5);
 $$;
-
 -- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
@@ -85,8 +79,6 @@ BEGIN
   RETURN NEW;
 END;
 $$;
-
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
-
