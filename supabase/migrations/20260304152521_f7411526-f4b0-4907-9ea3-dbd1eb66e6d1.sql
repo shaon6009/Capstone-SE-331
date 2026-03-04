@@ -1,4 +1,3 @@
-
 -- Create profiles table
 CREATE TABLE public.profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -41,7 +40,6 @@ CREATE POLICY "Users can like" ON public.likes
 
 CREATE POLICY "Users can unlike" ON public.likes
   FOR DELETE TO authenticated USING (auth.uid() = user_id);
-
 -- Create comments table
 CREATE TABLE public.comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -54,7 +52,6 @@ CREATE TABLE public.comments (
 ALTER TABLE public.comments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Comments viewable by authenticated" ON public.comments
   FOR SELECT TO authenticated USING (true);
-
 CREATE POLICY "Users can create comments" ON public.comments
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 -- Function to generate anon name
@@ -80,4 +77,5 @@ $$;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 
