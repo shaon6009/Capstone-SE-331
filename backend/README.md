@@ -9,7 +9,7 @@
 3. Update `backend/.env`:
    - `DATABASE_URL`: your Neon connection string
    - `JWT_SECRET`: long random string
-   - `CORS_ORIGIN`: frontend URL (default `http://localhost:5173`)
+   - `CORS_ORIGIN`: frontend URL (default  `http://localhost:5173`)
 
 ## 2) Create database schema on Neon
 
